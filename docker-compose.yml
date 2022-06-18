@@ -1,0 +1,45 @@
+version: '3.8'
+x-app:
+  &default-app
+  networks:
+    - voting-vote-net
+  restart: on-failure
+services:
+  app:
+    <<: *default-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: voting-vote-prod
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'curl -f http://localhost:8080/ping || exit 1'
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    image: 'rfdez/voting-vote:latest'
+    ports:
+      - '8080:8080'
+  dev-app:
+    <<: *default-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    container_name: voting-vote-dev
+    cap_add:
+      - SYS_PTRACE
+    image: 'rfdez/voting-vote:dev'
+    ports:
+      - '8080:8080'
+      - '2345:2345'
+    security_opt:
+      - 'seccomp:unconfined'
+    volumes:
+      - '.:/app:rw,delegated'
+networks:
+  voting-vote-net:
+    driver: bridge
+    name: voting-vote-net
