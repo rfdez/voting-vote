@@ -14,6 +14,7 @@ import (
 	"github.com/rfdez/voting-vote/internal/platform/server/http/handler/health"
 	"github.com/rfdez/voting-vote/internal/platform/server/http/middleware/logging"
 	"github.com/rfdez/voting-vote/internal/platform/server/http/middleware/recovery"
+	"github.com/rfdez/voting-vote/kit/command"
 )
 
 type Server struct {
@@ -21,9 +22,12 @@ type Server struct {
 	engine   *gin.Engine
 
 	shutdownTimeout time.Duration
+
+	// Dependencies
+	commandBus command.Bus
 }
 
-func NewServer(ctx context.Context, host string, port uint, shutdownTimeout time.Duration) (context.Context, Server) {
+func NewServer(ctx context.Context, host string, port uint, shutdownTimeout time.Duration, commandBus command.Bus) (context.Context, Server) {
 	gin.SetMode(gin.ReleaseMode)
 
 	srv := Server{
@@ -31,6 +35,9 @@ func NewServer(ctx context.Context, host string, port uint, shutdownTimeout time
 		engine:   gin.New(),
 
 		shutdownTimeout: shutdownTimeout,
+
+		// Dependencies
+		commandBus: commandBus,
 	}
 
 	srv.registerRoutes()

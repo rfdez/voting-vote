@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
+	"github.com/rfdez/voting-vote/internal/platform/bus/inmemory"
 	"github.com/rfdez/voting-vote/internal/platform/server/http"
 )
 
@@ -16,7 +17,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	ctx, httpSrv := http.NewServer(context.Background(), cfg.HttpHost, cfg.HttpPort, cfg.ShutdownTimeout)
+	var (
+		commandBus = inmemory.NewCommandBus()
+	)
+
+	ctx, httpSrv := http.NewServer(context.Background(), cfg.HttpHost, cfg.HttpPort, cfg.ShutdownTimeout, commandBus)
 	if err := httpSrv.Run(ctx); err != nil {
 		log.Fatal(err)
 	}
