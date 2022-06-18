@@ -65,12 +65,12 @@ func (s *Server) Run(ctx context.Context) error {
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Printf("HTTP server stopped: %v", err)
+			log.Fatal(err)
 		}
 	}()
 
 	<-ctx.Done()
-	ctxShutdown, cancel := context.WithTimeout(ctx, s.shutdownTimeout)
+	ctxShutdown, cancel := context.WithTimeout(context.Background(), s.shutdownTimeout)
 	defer cancel()
 
 	log.Printf("HTTP server shutting down...")

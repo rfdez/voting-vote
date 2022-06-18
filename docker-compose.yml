@@ -8,6 +8,7 @@ x-app:
     VOTE_DBPASS: '${DB_PASS}'
     VOTE_DBHOST: '${DB_HOST}'
     VOTE_DBPORT: '${DB_PORT}'
+    VOTE_DBNAME: '${DB_NAME}'
     VOTE_DBPARAMS: '${DB_PARAMS}'
   networks:
     - voting-vote-net
@@ -52,6 +53,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: '${DB_USER}'
       MONGO_INITDB_ROOT_PASSWORD: '${DB_PASS}'
+      MONGO_INITDB_DATABASE: '${DB_NAME}'
     expose:
       - '27017'
     healthcheck:

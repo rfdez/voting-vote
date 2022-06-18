@@ -33,11 +33,11 @@ func (c VoteCommand) Type() command.Type {
 
 // VoteCommandHandler is the handler for VoteCommand
 type VoteCommandHandler struct {
-	service service
+	service Service
 }
 
 // NewVoteCommandHandler creates a new VoteCommandHandler
-func NewVoteCommandHandler(service service) VoteCommandHandler {
+func NewVoteCommandHandler(service Service) VoteCommandHandler {
 	return VoteCommandHandler{
 		service: service,
 	}

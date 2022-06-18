@@ -1,6 +1,8 @@
 .PHONY: build watch clean test lint-dockerfile lint-go lint-yaml help
 .DEFAULT_GOAL := help
 
+SHELL := $(shell which bash)
+
 DEPS := docker docker-compose
 $(foreach bin,$(DEPS),\
 		$(if $(shell command -v $(bin) 2> /dev/null),$(@info Found `$(bin)`),$(error Please install `$(bin)`)))
