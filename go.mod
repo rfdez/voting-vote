@@ -9,6 +9,8 @@ require (
 	gotest.tools v2.2.0+incompatible
 )
 
+require github.com/stretchr/objx v0.1.0 // indirect
+
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
