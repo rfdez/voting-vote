@@ -1,6 +1,14 @@
 version: '3.8'
 x-app:
   &default-app
+  depends_on:
+    - db
+  environment:
+    VOTE_DBUSER: '${DB_USER}'
+    VOTE_DBPASS: '${DB_PASS}'
+    VOTE_DBHOST: '${DB_HOST}'
+    VOTE_DBPORT: '${DB_PORT}'
+    VOTE_DBPARAMS: '${DB_PARAMS}'
   networks:
     - voting-vote-net
   restart: on-failure
@@ -39,6 +47,29 @@ services:
       - 'seccomp:unconfined'
     volumes:
       - '.:/app:rw,delegated'
+  db:
+    container_name: voting-vote-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: '${DB_USER}'
+      MONGO_INITDB_ROOT_PASSWORD: '${DB_PASS}'
+    expose:
+      - '27017'
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo db:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    image: 'mongo:5.0'
+    networks:
+      - voting-vote-net
+    restart: always
+    volumes:
+      - 'voting-poll-dbdata:/data/db'
+volumes:
+  voting-poll-dbdata:
+    driver: local
+    name: voting-poll-dbdata
 networks:
   voting-vote-net:
     driver: bridge

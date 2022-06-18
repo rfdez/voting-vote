@@ -38,6 +38,7 @@ RUN go mod download \
 
 COPY cmd ./cmd
 COPY internal ./internal
+COPY kit ./kit
 
 RUN go build -o /vote -a ./cmd/vote/main.go
 
